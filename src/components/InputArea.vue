@@ -1,6 +1,8 @@
 <script setup>
 import { Top } from '@element-plus/icons-vue'
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
+import { ElMessage } from 'element-plus'
+import { createConversation } from '../api/CreateConversation'
 import UploadingBtn from './UploadingBtn.vue'
 import SpeechBtn from './SpeechBtn.vue'
 import RecordingBtn from './RecordingBtn.vue'
@@ -75,6 +77,12 @@ onMounted(() => {
 watch(text, () => {
   adjustHeight()
 })
+
+// 发送消息
+const handleSend = async () => {
+  const response = await createConversation()
+  console.log(response)
+}
 </script>
 
 <template>
@@ -99,7 +107,7 @@ watch(text, () => {
         <!-- 语音按钮 -->
         <SpeechBtn />
         <!-- 发送按钮 -->
-        <el-button type="primary" color="#181818" class="sent-button" circle>
+        <el-button type="primary" color="#181818" class="sent-button" circle @click="handleSend">
           <el-icon :size="25">
             <Top />
           </el-icon>

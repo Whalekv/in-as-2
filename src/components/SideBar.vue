@@ -1,14 +1,34 @@
 <script lang="ts" setup>
 import { Setting } from '@element-plus/icons-vue'
 import { useAsideStore } from '../stores/aside'
+import { useRouter } from 'vue-router'
+import { createConversation } from '@/api/CreateConversation'
 
 const aside = useAsideStore()
+const router = useRouter()
+
+const toSetting = () => {
+  router.push('/setting')
+}
+
+// 处理创建新对话按钮点击事件
+const handleCreateConversation = async () => {
+  try {
+    const response = await createConversation() // 调用 createConversation 方法
+    console.log('新对话创建成功', response)
+    // 可以在此处理成功后做其他操作，例如跳转到新对话页面等
+  } catch (error) {
+    console.error('创建对话失败', error)
+  }
+}
 </script>
 
 <template>
   <el-aside v-if="!aside.isCollapse" class="sidebar">
     <div class="header">
-      <h3>历史消息</h3>
+      <el-button plain class="createNewConversation" @click="handleCreateConversation">
+        <h2>新建对话</h2>
+      </el-button>
     </div>
     <!-- 历史消息列表 -->
 
@@ -31,7 +51,14 @@ const aside = useAsideStore()
     <!-- 操作区 -->
     <div class="operation-area">
       <!-- 设置按钮 -->
-      <el-button type="primary" color="#181818" :icon="Setting" class="setting-button" circle />
+      <el-button
+        @click="toSetting"
+        type="primary"
+        color="#181818"
+        :icon="Setting"
+        class="setting-button"
+        circle
+      />
     </div>
   </el-aside>
 </template>
@@ -48,6 +75,17 @@ const aside = useAsideStore()
   justify-content: center;
   align-items: center;
   height: 70px;
+  padding: 10px 15px;
+}
+.createNewConversation {
+  width: 100%;
+  height: 100%;
+  border-radius: 7px;
+  background-color: rgb(24, 24, 24);
+  h2 {
+    color: rgb(255, 255, 255);
+    letter-spacing: 5px;
+  }
 }
 
 .message-history {

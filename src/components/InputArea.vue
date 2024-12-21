@@ -2,7 +2,8 @@
 import { Top } from '@element-plus/icons-vue'
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
 import { ElMessage } from 'element-plus'
-import { createConversation } from '../api/CreateConversation'
+import { startChat } from '@/api/StartChat'
+
 import UploadingBtn from './UploadingBtn.vue'
 import SpeechBtn from './SpeechBtn.vue'
 import RecordingBtn from './RecordingBtn.vue'
@@ -80,8 +81,12 @@ watch(text, () => {
 
 // 发送消息
 const handleSend = async () => {
-  const response = await createConversation()
-  console.log(response)
+  try {
+    const response = await startChat()
+  } catch (error) {
+    console.error('fail', error)
+    throw error
+  }
 }
 </script>
 

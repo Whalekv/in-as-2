@@ -3,9 +3,11 @@ import { Setting } from '@element-plus/icons-vue'
 import { useAsideStore } from '../stores/aside'
 import { useRouter } from 'vue-router'
 import { createConversation } from '@/api/CreateConversation'
+import { useConversationStore } from '@/stores/Conversation'
 
 const aside = useAsideStore()
 const router = useRouter()
+const conversation = useConversationStore()
 
 const toSetting = () => {
   router.push('/setting')
@@ -15,8 +17,8 @@ const toSetting = () => {
 const handleCreateConversation = async () => {
   try {
     const response = await createConversation() // 调用 createConversation 方法
-    console.log('新对话创建成功', response)
-    // 可以在此处理成功后做其他操作，例如跳转到新对话页面等
+    console.log('createConverstation_response = ', response)
+    conversation.getConverstationId(response)
   } catch (error) {
     console.error('创建对话失败', error)
   }

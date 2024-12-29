@@ -1,13 +1,14 @@
 <script setup>
 import { Top } from '@element-plus/icons-vue'
 import { ref, computed, onMounted, nextTick, watch } from 'vue'
-import { ElMessage } from 'element-plus'
-import { startChat } from '@/api/StartChat'
+import { useMessageStore } from '@/stores/Message'
 
 import UploadingBtn from './UploadingBtn.vue'
 import SpeechBtn from './SpeechBtn.vue'
 import RecordingBtn from './RecordingBtn.vue'
 
+//调用 useMessageStore
+const messageStore = useMessageStore()
 // 存储textarea的内容
 const text = ref('')
 // 引用textarea元素
@@ -72,6 +73,13 @@ onMounted(() => {
     // 初始调整高度
     adjustHeight()
   })
+  // 添加回车键监听事件
+  textareaEl.value.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter' && !event.shiftKey && text.value.trim() !== '') {
+      event.preventDefault() // 阻止默认的回车行为（换行）
+      handleSend()
+    }
+  })
 })
 
 // 监听文本变化，调整高度
@@ -80,13 +88,17 @@ watch(text, () => {
 })
 
 // 发送消息
-const handleSend = async () => {
-  try {
-    const response = await startChat()
-  } catch (error) {
-    console.error('fail', error)
-    throw error
-  }
+const handleSend = () => {
+  //呈现用户输入的消息
+  messageStore.message.push({
+    role: 'user',
+    content: text.value,
+    content_type: 'text',
+  })
+  console.log('handleSend.message = ', messageStore.message)
+  //调用发送消息api
+  messageStore.messageProcessing()
+  text.value = ''
 }
 </script>
 

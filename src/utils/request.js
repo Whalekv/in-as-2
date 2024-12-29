@@ -35,10 +35,10 @@ service.interceptors.response.use(
   (response) => {
     const res = response.data
     // 这里可以根据后端的响应结构进行调整
-    if (res.code === 0 || res.data != '') {
-      return res.data
+    if (res.code === 0 || res) {
+      return res
     } else {
-      ElMessage.error(res.message || 'a请求失败')
+      ElMessage.error(res.message || '请求失败')
       return Promise.reject(new Error(res.message || '请求失败'))
     }
   },
